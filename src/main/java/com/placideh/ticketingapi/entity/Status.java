@@ -4,4 +4,8 @@ public enum Status {
     VERIFIED,
     UNVERIFIED,
     RESET,
+    FORWARD,
+    BACKWARD,
+    MAINROUTE,
+    INTERMEDIATEROUTE
 }

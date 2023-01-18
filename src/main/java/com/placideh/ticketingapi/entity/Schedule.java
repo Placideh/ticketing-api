@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,11 +20,12 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="schedule_id")
     private Integer id;
-
+    @Column(name="start_time")
     private LocalDateTime startTime;
+    @Column(name="end_time")
     private LocalDateTime endTime;
-
-    private LocalDateTime date;
+    @Column(name="date")
+    private LocalDate date;
 
 
 }

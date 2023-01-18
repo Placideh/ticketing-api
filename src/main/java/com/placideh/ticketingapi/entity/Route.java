@@ -32,4 +32,17 @@ public class Route {
     @NotBlank(message = "Route Name can not be blank")
     @NotEmpty(message = "Route Name must be entered")
     private String name;
+
+
+    @SequenceGenerator(name = "route_seq", sequenceName = "route_seq", initialValue = 100, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "route_seq")
+    @Column(name = "route_number")
+    @NotBlank(message = "Route Number can not be blank")
+    @NotEmpty(message = "Route Number must be entered")
+    private Integer routeNumber;
+
+    @Column(name = "status")
+    @NotBlank(message = "Route Status  can not be blank")
+    @NotEmpty(message = "Route Status must be entered")
+    private Status status;
 }

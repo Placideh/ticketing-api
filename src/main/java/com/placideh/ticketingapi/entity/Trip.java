@@ -20,7 +20,13 @@ public class Trip {
     private Integer id;
 
     @OneToOne
-    private Route route;
+    @Column(name="source")
+    private Route source;
+    @OneToOne
+    @Column(name="destination")
+    private Route destination;
+
+
 
     @OneToOne
     private Bus bus;
@@ -28,7 +34,10 @@ public class Trip {
     @OneToOne
     private Schedule schedule;
     @Column(name="allocated_seats")
-    private Integer allocatedSeats;
+    private Integer allocatedSeats=0; //setting zero as initial value on create
+
     @Column(name="remaining_seats")
-    private Integer remainingSeats;
+    private Integer remainingSeats=0; //setting zero as initial value on create
+    @Column(name = "trip_status")
+    private Status status; // status either FORWARD OR BACKWARD
 }

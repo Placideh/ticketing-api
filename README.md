@@ -88,7 +88,7 @@ To run the app make sure you have :
 * Gather possible Requirements
 * Project Setup
 * Define Database Schemas 
-* Implement Authentication
+* Implement Authentication --> on account creation you will receive an email to confirm your account
 * Implement Business Logic
 * Test Implemented Feature
 * Push Changes to remote repository for better version and tracking

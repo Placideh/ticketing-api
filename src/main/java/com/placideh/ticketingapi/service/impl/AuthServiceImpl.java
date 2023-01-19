@@ -1,10 +1,7 @@
 package com.placideh.ticketingapi.service.impl;
 
 import com.placideh.ticketingapi.Dto.UserDto;
-import com.placideh.ticketingapi.entity.OneTimePassword;
-import com.placideh.ticketingapi.entity.Role;
-import com.placideh.ticketingapi.entity.Status;
-import com.placideh.ticketingapi.entity.User;
+import com.placideh.ticketingapi.entity.*;
 import com.placideh.ticketingapi.exception.AlreadyExistException;
 import com.placideh.ticketingapi.exception.CustomInputException;
 import com.placideh.ticketingapi.exception.NotFoundException;
@@ -13,11 +10,16 @@ import com.placideh.ticketingapi.repository.UserRepo;
 import com.placideh.ticketingapi.service.AuthService;
 import com.placideh.ticketingapi.service.OneTimePasswordService;
 import com.placideh.ticketingapi.service.RoleService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component
@@ -111,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public Integer login(String email, String password) {
+    public Map<String,String> login(String email, String password) {
         log.info("user login");
 
         User existingUser=userRepo.findByEmail(email.trim())
@@ -120,7 +122,24 @@ public class AuthServiceImpl implements AuthService {
         if (!existingUser.getStatus().equals(Status.VERIFIED)) throw new CustomInputException("User Status  not verified");
 
         if(!BCrypt.checkpw(password,existingUser.getPassword())) throw new CustomInputException("Invalid email/password");
-        return existingUser.getUserId();
+        return generateJWTToken(existingUser);
+    }
+
+    private Map<String ,String> generateJWTToken(User user){
+        System.out.println("Hello:"+Constants.API_SECRET_KEY);
+        long timestamp=System.currentTimeMillis();
+        String token= Jwts.builder().signWith(SignatureAlgorithm.HS256,Constants.API_SECRET_KEY)
+                .setIssuedAt(new Date(timestamp))
+                .setExpiration(new Date(timestamp+ Constants.TOKEN_VALIDITY))
+                .claim("id",user.getUserId())
+                .claim("email",user.getEmail())
+                .claim("firstName",user.getFirstName())
+                .claim("email",user.getEmail())
+                .compact();
+        Map<String ,String> map=new HashMap<>();
+        map.put("token", token);
+        return map;
+
     }
     private void triggerTheEmailMsg(String email,String user,String otp,String message) throws Exception {
         emailSenderService.sendCommunicationEmail(

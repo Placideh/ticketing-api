@@ -2,8 +2,7 @@ package com.placideh.ticketingapi.controller;
 
 import com.placideh.ticketingapi.entity.Role;
 import com.placideh.ticketingapi.service.RoleService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1/role")
-@Api(value = "Role endpoints")
+@SecurityRequirement(name = "bearerAuth")
 public class RoleController {
     private final RoleService roleService;
 
@@ -23,7 +22,6 @@ public class RoleController {
     }
 
     @PostMapping("/{roleName}")
-    @ApiOperation(value="create a role")
     public ResponseEntity<Map<String,Role>> createRole(@PathVariable String roleName){
         Map<String,Role> message=new HashMap<>();
         Role role= roleService.createRole(roleName);
@@ -32,7 +30,6 @@ public class RoleController {
     }
 
     @GetMapping("/name/{role-name}")
-    @ApiOperation(value="get  a role by name")
     public ResponseEntity<Map<String,Role>> getRoleByName(@PathVariable("role-name") String roleName){
         Map<String,Role> message=new HashMap<>();
         Role existingRole=roleService.getRoleByName(roleName);
@@ -40,7 +37,6 @@ public class RoleController {
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
     @GetMapping("/id/{id}")
-    @ApiOperation(value="get a role by Id")
     public ResponseEntity<Role> getRoleById(@PathVariable Integer id){
         Role existingRole=roleService.getRoleById(id);
         return new ResponseEntity<>(existingRole,HttpStatus.OK);

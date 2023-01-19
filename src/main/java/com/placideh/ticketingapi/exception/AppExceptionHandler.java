@@ -53,13 +53,12 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
-        final String[] key = {""};
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) ->{
-            key[0] = ((FieldError) error).getField();
+            String fieldName = ((FieldError) error).getField();
             String message = error.getDefaultMessage();
-            errors.put(key[0], message);
+            errors.put(fieldName, message);
         });
-        return new ResponseEntity<Object>(new ApiException(errors.get(key[0]).toString(), HttpStatus.BAD_REQUEST, LocalDateTime.now()),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }
 }

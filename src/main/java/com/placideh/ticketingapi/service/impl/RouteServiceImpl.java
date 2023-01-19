@@ -23,7 +23,11 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public Route createRoute(Route route) {
+    public Route createRoute(RouteDto routeDto) {
+        Route route=Route.builder()
+                .name(routeDto.getName().trim().toUpperCase())
+                .status(Status.valueOf(routeDto.getStatus().trim().toUpperCase()))
+                .build();
         return routeRepo.save(route);
     }
 
@@ -39,8 +43,10 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public Route updateRouteById(Integer routeId, RouteDto route) {
-        return routeRepo.updateRoute(route.getName(), Status.valueOf(route.getStatus()),routeId)
-                .orElseThrow(()-> new NotFoundException("routeId: "+routeId+" not found"));
+    public void updateRouteById(Integer routeId, RouteDto route) {
+        routeRepo.findById(routeId)
+                .orElseThrow(()-> new NotFoundException("RouteId: "+routeId+" not found"));
+
+         routeRepo.updateRoute(route.getName(),Status.valueOf(route.getStatus().toUpperCase()).ordinal() ,routeId);
     }
 }

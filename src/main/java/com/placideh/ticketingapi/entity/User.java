@@ -47,6 +47,7 @@ public class User {
     @NotBlank(message = "password name can not be blank")
     @NotEmpty(message = "password must be entered")
     @Size(min = 8,max = 200,message = "password must be 8 characters or more")
+    @JsonIgnore
     private String password;
 
     @Column(name = "email")

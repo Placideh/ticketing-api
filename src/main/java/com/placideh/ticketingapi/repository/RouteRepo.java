@@ -17,10 +17,10 @@ public interface RouteRepo extends JpaRepository<Route,Integer> {
     @Modifying
     @Transactional
     @Query(
-            value="update routes set name=?1,status=?2 where route_id=?3",
+            value="update routes set route_name=?1,status=?2 where route_id=?3",
             nativeQuery=true
     )
-    Optional<Route> updateRoute(String name, Status status, Integer routeId);
+    void updateRoute(String name, Integer status, Integer routeId);
 
     Optional<Route> findByName(String name);
 }

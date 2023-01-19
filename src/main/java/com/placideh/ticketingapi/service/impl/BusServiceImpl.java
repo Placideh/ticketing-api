@@ -20,6 +20,7 @@ public class BusServiceImpl implements BusService {
 
     @Override
     public Bus createBus(Bus bus) {
+        bus.setPlateNumber(bus.getPlateNumber().toUpperCase());
         return busRepo.save(bus);
     }
 
@@ -35,8 +36,11 @@ public class BusServiceImpl implements BusService {
     }
 
     @Override
-    public Bus updateBusByPlateNumber(String plateNumber, Integer seatSize) {
-        return busRepo.updateBus(seatSize,plateNumber)
+    public void updateBusByPlateNumber(String plateNumber, Integer seatSize) {
+        busRepo.findByPlateNumber(plateNumber)
                 .orElseThrow(()-> new NotFoundException("plateNumber: "+plateNumber+" not found "));
+
+         busRepo.updateBus(seatSize,plateNumber);
+
     }
 }

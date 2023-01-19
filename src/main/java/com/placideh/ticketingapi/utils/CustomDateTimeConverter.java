@@ -6,18 +6,18 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Component
-public class Utils {
+public class CustomDateTimeConverter {
 
     public Schedule convertScheduleDtoToSchedule(ScheduleDto schedule){
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        LocalDateTime startTime = LocalDateTime.parse(schedule.getStartTime(), timeFormatter);
-        LocalDateTime endTime = LocalDateTime.parse(schedule.getEndTime(), timeFormatter);
-        LocalDate date = LocalDate.parse(schedule.getDate(), dateFormatter);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+        LocalTime startTime = LocalTime.parse(schedule.getStartTime());
+        LocalTime endTime = LocalTime.parse(schedule.getEndTime());
+        LocalDateTime date = LocalDate.parse(schedule.getDate(), dateFormatter).atStartOfDay();
         return Schedule.builder()
                 .startTime(startTime)
                 .endTime(endTime)

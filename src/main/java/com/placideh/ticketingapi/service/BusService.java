@@ -14,5 +14,5 @@ public interface BusService {
 
     Bus getBusByPlateNumber(String plateNumber);
 
-    Bus updateBusByPlateNumber(String plateNumber,Integer seatSize);
+    void updateBusByPlateNumber(String plateNumber,Integer seatSize);
 }

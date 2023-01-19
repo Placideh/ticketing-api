@@ -20,4 +20,6 @@ public interface TripService {
 
     Trip getTripBySchedule(String source, String destination, ScheduleDto scheduleDto);
 
+    Trip getTripById(Integer tripId);
+
 }

@@ -20,6 +20,11 @@ public class TripDto {
 
     private ScheduleDto schedule;
 
+    @NotBlank(message = "routeStops name can not be blank")
+    @NotEmpty(message = "routeStops must be entered")
+    @Min(50)
+    private String routeStops;
+
 
 
 }

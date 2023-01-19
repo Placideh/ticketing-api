@@ -3,12 +3,12 @@ package com.placideh.ticketingapi.controller;
 import com.placideh.ticketingapi.Dto.RouteDto;
 import com.placideh.ticketingapi.entity.Route;
 import com.placideh.ticketingapi.service.RouteService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1/routes")
-@Api(value = "Route endpoints")
+@SecurityRequirement(name = "bearerAuth")
 public class RouteController {
 
     private final RouteService routeService;
@@ -26,8 +26,7 @@ public class RouteController {
     }
 
     @PostMapping("/")
-    @ApiOperation(value="create a route")
-    public ResponseEntity<Map<String, Route>> createRoute(Route route){
+    public ResponseEntity<Map<String, Route>> createRoute(@Valid @RequestBody RouteDto route){
         Map<String,Route> message=new HashMap<>();
         Route createdRoute= routeService.createRoute(route);
         message.put("success",createdRoute);
@@ -35,29 +34,24 @@ public class RouteController {
     }
 
     @GetMapping("/{routeNumber}")
-    @ApiOperation(value="get a single route")
     public ResponseEntity<Map<String, Route>> getRouteByRouteNumber(@PathVariable Integer routeNumber){
         Map<String,Route> message=new HashMap<>();
         Route route= routeService.getRouteByRouteNumber(routeNumber);
         message.put("success",route);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @GetMapping("/")
-    @ApiOperation(value="get all route")
     public ResponseEntity<Map<String, List<Route>>> getRoutes(){
         Map<String,List<Route>> message=new HashMap<>();
         List<Route> routes= routeService.getRoutes();
         message.put("success",routes);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @PutMapping("/{routeId}")
-    @ApiOperation(value="update a route")
-    public ResponseEntity<Map<String, Route>> updateRoute(Integer routeId, RouteDto route){
-        Map<String,Route> message=new HashMap<>();
-        Route updatedRoute= routeService.updateRouteById(routeId,route);
-        message.put("success",updatedRoute);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    @PutMapping("{routeId}")
+    public ResponseEntity updateRoute(@PathVariable Integer routeId,@Valid @RequestBody RouteDto route){
+         routeService.updateRouteById(routeId,route);
+        return new ResponseEntity<>( HttpStatus. NO_CONTENT);
     }
 }

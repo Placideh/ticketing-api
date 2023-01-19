@@ -2,12 +2,12 @@ package com.placideh.ticketingapi.controller;
 
 import com.placideh.ticketingapi.entity.Bus;
 import com.placideh.ticketingapi.service.BusService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/v1/buses")
-@Api(value = "Bus endpoints")
+@SecurityRequirement(name = "bearerAuth")
 public class BusController {
 
     private final BusService busService;
@@ -25,8 +25,7 @@ public class BusController {
     }
 
     @PostMapping( value = "/create")
-    @ApiOperation(value = "register a bus")
-    public ResponseEntity<Map<String,Bus>> registerBus(Bus bus ) {
+    public ResponseEntity<Map<String,Bus>> registerBus(@Valid @RequestBody Bus bus) {
         Map<String ,Bus> message=new HashMap<>();
         Bus newBus;
         try {
@@ -40,7 +39,6 @@ public class BusController {
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
     @GetMapping("/")
-    @ApiOperation(value = "get all buses")
     public ResponseEntity<Map<String, List<Bus>>> getBuses(){
         Map<String ,List<Bus>> message=new HashMap<>();
         List<Bus> buses=busService.getBuses();
@@ -48,7 +46,6 @@ public class BusController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
     @GetMapping("/{plateNumber}")
-    @ApiOperation(value = "get bus")
     public ResponseEntity<Map<String, Bus>> getBusByPlateNumber(@PathVariable String plateNumber){
         Map<String ,Bus> message=new HashMap<>();
         Bus bus=busService.getBusByPlateNumber(plateNumber);
@@ -56,11 +53,8 @@ public class BusController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
     @PutMapping("/{plateNumber}")
-    @ApiOperation(value = "update bus ")
-    public ResponseEntity<Map<String, Bus>> updateBusByPlateNumber(@PathVariable String plateNumber,Integer seats){
-        Map<String ,Bus> message=new HashMap<>();
-        Bus bus=busService.updateBusByPlateNumber(plateNumber,seats);
-        message.put("message",bus);
-        return new ResponseEntity<>(message, HttpStatus.OK);
+    public ResponseEntity updateBusByPlateNumber(@PathVariable String plateNumber,Integer seats){
+        busService.updateBusByPlateNumber(plateNumber,seats);
+        return new ResponseEntity<>( HttpStatus.NO_CONTENT);
     }
 }

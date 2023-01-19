@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -23,6 +22,6 @@ public interface BusRepo extends JpaRepository<Bus,Integer> {
             value="update buses set seat_size=?1 where plate_number=?2",
             nativeQuery=true
     )
-    Optional<Bus> updateBus(Integer seatSize,  String plateNumber);
+ void updateBus(Integer seatSize,  String plateNumber);
 
 }

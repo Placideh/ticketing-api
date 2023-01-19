@@ -4,6 +4,7 @@ package com.placideh.ticketingapi.service.impl;
 import com.placideh.ticketingapi.Dto.ScheduleDto;
 import com.placideh.ticketingapi.Dto.TripDto;
 import com.placideh.ticketingapi.entity.*;
+import com.placideh.ticketingapi.exception.CustomInputException;
 import com.placideh.ticketingapi.exception.NotFoundException;
 import com.placideh.ticketingapi.repository.*;
 import com.placideh.ticketingapi.service.BusService;
@@ -23,15 +24,17 @@ public class TripServiceImpl implements TripService {
     private final TripRepo tripRepo;
     private final RouteRepo routeRepo;
 
-    private final ScheduleService service;
+    private final ScheduleService scheduleService;
     private final BusService busService;
 
+    private final Integer ZERO_SEAT_VALUE=0;
+
     public TripServiceImpl(BusRepo busRepo, TripRepo tripRepo, RouteRepo routeRepo,
-                           ScheduleServiceImpl service, BusService busService) {
+                           ScheduleService scheduleService, BusService busService) {
         this.busRepo = busRepo;
         this.tripRepo = tripRepo;
         this.routeRepo = routeRepo;
-        this.service = service;
+        this.scheduleService = scheduleService;
         this.busService = busService;
     }
 
@@ -40,17 +43,23 @@ public class TripServiceImpl implements TripService {
 
         log.info("creating the trip");
 
-        Bus  bus=busRepo.findByPlateNumber(trip.getPlateNumber())
+        Bus  bus=busRepo.findByPlateNumber(trip.getPlateNumber().trim().toUpperCase())
                 .orElseThrow(()-> new NotFoundException("Bus PlateNumber: "+trip.getPlateNumber()+" not found"));
 
         //check if  the trip is forward or reverse
-        Route sourceRoute= routeRepo.findByName(trip.getSource())
+        Route sourceRoute= routeRepo.findByName(trip.getSource().trim().toUpperCase())
                 .orElseThrow(()-> new NotFoundException("Source Route: "+trip.getSource()+" not found"));
 
-        Route destinationRoute= routeRepo.findByName(trip.getDestination())
+        Route destinationRoute= routeRepo.findByName(trip.getDestination().trim().toUpperCase())
                 .orElseThrow(()-> new NotFoundException("Destination Route: "+trip.getDestination()+" not found"));
 
-        Schedule schedule=service.getScheduleByDateAndTime(trip.getSchedule());
+        Schedule schedule=scheduleService.getScheduleByDateAndTime(trip.getSchedule());
+
+        //check if the vehicle  for a trip isn't booked on that schedule
+        Trip existingTrip=getTripByBus(bus.getPlateNumber());
+
+        if (existingTrip.getSchedule().equals(schedule)) throw new CustomInputException("The Bus selected is already occupied on that time bound");
+
 
 //        TODO: CHECK ALL VALIDATION REGARDING CREATING THE TRIP HERE
         Trip newTrip;
@@ -60,6 +69,8 @@ public class TripServiceImpl implements TripService {
                     .source(sourceRoute)
                     .destination(destinationRoute)
                     .bus(bus)
+                    .allocatedSeats(ZERO_SEAT_VALUE)
+                    .remainingSeats(bus.getSeatSize())
                     .status(Status.FORWARD)
                     .schedule(schedule)
                     .build();
@@ -71,6 +82,8 @@ public class TripServiceImpl implements TripService {
                 .source(sourceRoute)
                 .destination(destinationRoute)
                 .bus(bus)
+                .allocatedSeats(ZERO_SEAT_VALUE)
+                .remainingSeats(bus.getSeatSize())
                 .status(Status.BACKWARD)
                 .schedule(schedule)
                 .build();
@@ -91,19 +104,25 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public Trip updateTrip(Trip trip) {
+
         return tripRepo.save(trip);
     }
 
     @Override
     public Trip getTripBySchedule(String source, String destination, ScheduleDto scheduleDto) {
-        Route sourceRoute= routeRepo.findByName(source)
+        Route sourceRoute= routeRepo.findByName(source.trim().toUpperCase())
                 .orElseThrow(()-> new NotFoundException("Source Route: "+source+" not found"));
 
-        Route destinationRoute= routeRepo.findByName(destination)
+        Route destinationRoute= routeRepo.findByName(destination.trim().toUpperCase())
                 .orElseThrow(()-> new NotFoundException("Destination Route: "+destination+" not found"));
-        Schedule schedule=service.getScheduleByDateAndTime(scheduleDto);
+        Schedule schedule=scheduleService.getScheduleByDateAndTime(scheduleDto);
 
         return tripRepo.findBySourceAndDestinationAndSchedule(sourceRoute,destinationRoute,schedule);
     }
-//    TODO IMPLEMENT ALSO GETTING ALL POSSIBLE SCHEDULES BY DATE
+
+    @Override
+    public Trip getTripById(Integer tripId) {
+        return tripRepo.findById(tripId)
+                .orElseThrow(()-> new NotFoundException("TripId: "+tripId+" not found"));
+    }
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "buses",
@@ -32,8 +33,6 @@ public class Bus {
     private String plateNumber;
 
     @Column(name = "seat_size")
-    @NotBlank(message = "Bus seatSize can not be blank")
-    @NotEmpty(message = "Bus seatSize must be entered")
     private Integer seatSize;
 
 }

@@ -1,6 +1,5 @@
 package com.placideh.ticketingapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,11 +20,9 @@ public class Ticket {
     private Integer id;
 
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Trip trip;
 

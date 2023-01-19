@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "schedules")
@@ -21,11 +22,11 @@ public class Schedule {
     @Column(name="schedule_id")
     private Integer id;
     @Column(name="start_time")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
     @Column(name="end_time")
-    private LocalDateTime endTime;
+    private LocalTime endTime;
     @Column(name="date")
-    private LocalDate date;
+    private LocalDateTime date;
 
 
 }

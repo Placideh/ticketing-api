@@ -72,7 +72,13 @@ To run the app make sure you have :
 - application properties or .env file with all data
 - make sure to download all dependencies in pom.xml file
 -  ```ps
-    docker-compose up --build ticket_api doctor    #run the app in the container
+   - to generate the jar file so as to build the docker image open terminal
+   
+   make sure you are on the root level
+   
+   - mvn clean install   #here will get a jar in folder named target   
+   
+   - docker-compose up --build ticket_api doctor    #run the app in the container
     
    - Or run the project in your IDEA
     ```

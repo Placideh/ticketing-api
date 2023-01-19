@@ -61,7 +61,6 @@ public class TripServiceImpl implements TripService {
         if (existingTrip.getSchedule().equals(schedule)) throw new CustomInputException("The Bus selected is already occupied on that time bound");
 
 
-//        TODO: CHECK ALL VALIDATION REGARDING CREATING THE TRIP HERE
         Trip newTrip;
         if (sourceRoute.getRouteNumber()< destinationRoute.getRouteNumber()) {
             log.info("saving the trip In Forward");

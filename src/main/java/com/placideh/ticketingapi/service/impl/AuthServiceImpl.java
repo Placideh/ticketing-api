@@ -126,7 +126,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Map<String ,String> generateJWTToken(User user){
-        System.out.println("Hello:"+Constants.API_SECRET_KEY);
         long timestamp=System.currentTimeMillis();
         String token= Jwts.builder().signWith(SignatureAlgorithm.HS256,Constants.API_SECRET_KEY)
                 .setIssuedAt(new Date(timestamp))

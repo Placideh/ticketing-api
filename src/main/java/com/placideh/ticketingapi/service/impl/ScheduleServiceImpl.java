@@ -31,20 +31,22 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule createSchedule(ScheduleDto scheduleDto) {
         log.info("creating the schedule");
-        LocalDateTime currentDate=LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        String currentDate=LocalDate.now().toString();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime date = LocalDate.parse(currentDate, dateFormatter).atStartOfDay();
 
         Schedule schedule=customDateTimeConverter.convertScheduleDtoToSchedule(scheduleDto);
 
-        if(schedule.getDate().isBefore(LocalDateTime.now())) throw new CustomInputException("You can only generate a ticket from the present time");
+        if(schedule.getDate().isBefore(date)) throw new CustomInputException("You can only generate a schedule starting from the present time");
 
-        if((schedule.getDate().equals(currentDate)) && schedule.getStartTime().isAfter(LocalTime.now()))
+        if((schedule.getDate().equals(date)) && schedule.getStartTime().isAfter(LocalTime.now()))
             throw new CustomInputException("You can only schedule start time which is not after present time ");
 
-        if ((schedule.getDate().equals(currentDate)) && schedule.getStartTime().isAfter(schedule.getEndTime()))
+        if ((schedule.getDate().equals(date)) && schedule.getStartTime().isAfter(schedule.getEndTime()))
             throw new CustomInputException("You can only schedule start time which is not after ending time ");
 
 
-        if ((schedule.getDate().isAfter(currentDate)) && (schedule.getStartTime().isAfter(schedule.getEndTime())))
+        if ((schedule.getDate().isAfter(date)) && (schedule.getStartTime().isAfter(schedule.getEndTime())))
             throw new CustomInputException("You can only schedule start time which is not after ending time ");
 
         return scheduleRepo.save(schedule);

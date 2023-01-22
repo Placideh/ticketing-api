@@ -26,7 +26,7 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<Map<String, Schedule>> createSchedule(@Valid @RequestBody ScheduleDto scheduleDto){
         Map<String,Schedule> message=new HashMap<>();
         Schedule createdSchedule= scheduleService.createSchedule(scheduleDto);
@@ -42,7 +42,7 @@ public class ScheduleController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @PostMapping("/schedule")
+    @PostMapping("/view-schedule")
     public ResponseEntity<Map<String,  Schedule>> getScheduleByDateAndTime(@Valid @RequestBody ScheduleDto scheduleDto){
         Map<String,Schedule> message=new HashMap<>();
         Schedule schedule= scheduleService.getScheduleByDateAndTime(scheduleDto);

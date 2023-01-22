@@ -22,7 +22,7 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<Map<String, Ticket>> generateTicket(@RequestParam String userEmail,@RequestParam Integer tripId){
 
         Map<String,Ticket> message=new HashMap<>();
@@ -31,7 +31,7 @@ public class TicketController {
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{ticketId}")
+    @GetMapping("/{ticketId}")
     public ResponseEntity<Map<String, Ticket>> getTicketById(Integer tickedId){
 
         Map<String,Ticket> message=new HashMap<>();

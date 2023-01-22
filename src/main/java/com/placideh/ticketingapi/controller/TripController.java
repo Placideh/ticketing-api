@@ -28,7 +28,7 @@ public class TripController {
         this.tripService = tripService;
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<Map<String, Trip>> createTrip(@Valid @RequestBody TripDto tripDto){
 
         Map<String,Trip> message=new HashMap<>();
@@ -45,7 +45,7 @@ public class TripController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @GetMapping("/{plateNumber}")
+    @GetMapping("/bus/{plateNumber}")
     public ResponseEntity<Map<String, Trip>> getTripByBus(@PathVariable String plateNumber){
 
         Map<String,Trip> message=new HashMap<>();

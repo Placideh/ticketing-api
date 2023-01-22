@@ -58,7 +58,7 @@ public class TripServiceImpl implements TripService {
         //check if the vehicle  for a trip isn't booked on that schedule
         Trip existingTrip=getTripByBus(bus.getPlateNumber());
 
-        if (existingTrip.getSchedule().equals(schedule)) throw new CustomInputException("The Bus selected is already occupied on that time bound");
+        if (existingTrip!=null && existingTrip.getSchedule().equals(schedule)) throw new CustomInputException("The Bus selected is already occupied on that time bound");
 
 
         Trip newTrip;

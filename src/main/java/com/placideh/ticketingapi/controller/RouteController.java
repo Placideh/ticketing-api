@@ -25,7 +25,7 @@ public class RouteController {
         this.routeService = routeService;
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<Map<String, Route>> createRoute(@Valid @RequestBody RouteDto route){
         Map<String,Route> message=new HashMap<>();
         Route createdRoute= routeService.createRoute(route);

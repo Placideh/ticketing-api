@@ -12,7 +12,7 @@ The project uses the following layout:
 ├──────├── src             application file bootstrap 
 │      ├── main 
 │      │     ├──java 
-│      │       │       ├──ticketapi
+│      │       │   ├──ticketapi
 │      │       │           ├──config
 │      │       │           ├──controller
 │      │       │           ├──Dto
@@ -32,13 +32,13 @@ The project uses the following layout:
 │      ├── target              
 │      ├── .evn                
 │      ├── .env.example
-│            ├── .gitignore
-│            ├── docker-compose.yml
-│            ├── Dockerfile
-│            ├── HELP.md
-│            ├── mvnw
-│            ├── mvnw.cmd
-│            └── README.md                  
+│      ├── .gitignore
+│      ├── docker-compose.yml
+│      ├── Dockerfile
+│      ├── HELP.md
+│      ├── mvnw
+│      ├── mvnw.cmd
+│      └── README.md                  
                           
 
 ```
@@ -88,7 +88,7 @@ To run the app make sure you have :
 * Gather possible Requirements
 * Project Setup
 * Define Database Schemas 
-* Implement Authentication --> on account creation you will receive an email to confirm your account
+* Implement Authentication --> on account creation you will receive an email to confirm your account(you have to set password and Gmail account in application.properties as well the .env to be able to send the email)
 * Implement Business Logic
 * Test Implemented Feature
 * Push Changes to remote repository for better version and tracking
